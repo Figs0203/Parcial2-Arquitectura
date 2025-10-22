@@ -7,8 +7,8 @@ La respuesta se devuelve en formato JSON, lo que lo hace fácilmente integrable 
 
 # Análisis: Comunicación con otro servicio
 
-Si este microservicio necesitara comunicarse con otro encargado de almacenar el historial de cálculos en una base de datos externa, el diseño se modificaría para incluir una llamada HTTP a ese servicio.
-Por ejemplo, después de calcular el factorial, se podría enviar una solicitud POST con los datos del número, su factorial y la etiqueta (par o impar) al otro microservicio mediante la librería requests.
+Si este microservicio debiera comunicarse con otro encargado de almacenar el historial de cálculos en una base de datos externa, sería necesario modificar su arquitectura para incorporar un mecanismo de interacción entre servicios. La idea principal sería que, una vez realizado el cálculo del factorial y determinada la paridad del número, el microservicio actual enviara estos resultados al otro servicio mediante una solicitud HTTP, generalmente usando el método POST. Esto se podría implementar fácilmente con la librería requests de Python, enviando los datos en formato JSON.
 
-Este enfoque permite mantener una arquitectura desacoplada, en la que cada servicio cumple una responsabilidad específica: uno calcula y otro almacena. Además, esta separación mejora la escalabilidad y facilita el mantenimiento.
-En escenarios de alta concurrencia, también se podría implementar comunicación asíncrona usando una cola de mensajes (como RabbitMQ o Kafka) para evitar bloqueos y manejar mejor la carga.
+Esta integración permitiría que el microservicio de cálculo se mantuviera ligero y especializado, ya que delegaría la gestión del almacenamiento a un servicio independiente. De esta forma, cada componente cumpliría una función específica: uno calcula y otro guarda los resultados. Esta separación de responsabilidades favorece el desacoplamiento, facilita el mantenimiento y permite escalar cada parte de manera independiente según la demanda o carga de trabajo.
+
+En un escenario más complejo o de alta concurrencia, podría considerarse el uso de una cola de mensajería para manejar la comunicación de manera asíncrona. Esto evitaría que el servicio de cálculo dependa directamente de la disponibilidad del servicio de almacenamiento, mejorando la resiliencia, reduciendo la latencia percibida y permitiendo que el sistema crezca sin afectar su rendimiento general.
